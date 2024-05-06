@@ -22,7 +22,7 @@ int Signin()
 {
     FILE *fp;
     char name[50], input[50];
-    printf("    请输入用户名：");
+    printf("        请输入用户名：");
     scanf("%s", input);
     getchar();
     fp = fopen("login.txt", "r");
@@ -42,21 +42,45 @@ int Signin()
     fclose(fp);
 }
 
+int repeat_Verify(char input[])
+{
+    FILE *fp;
+    flag=0;
+    fp = fopen("login.txt", "r");
+    if(fp==NULL) return ERROR;
+    while(fgets(user, 20, fp)!=NULL)
+    {
+        user[strlen(user)-1] = '\0';
+        if(strcmp(user, input)==0)
+        {
+            flag=1;
+            break;
+        }
+    }
+    if(flag==1) return ERROR;
+    else return OK;
+}
+
 int Register()    //注意后期要查看是否重复名字
 {
     FILE *fp;
     char name[20], passwd[20], passwd2[20];
     fp = fopen("login.txt", "a+");
     if(fp==NULL) return 0;
-    printf("    请输入你要注册的用户名：");
+    printf("        请输入你要注册的用户名：");
     scanf("%s", name);
     getchar();
+    if(repeat_Verify(name)==-1)
+    {
+        printf("\n        用户名已被使用！\n");
+        return ERROR;
+    }
     while(1)
     {
-        printf("    请设立密码：");
+        printf("        请设立密码：");
         scanf("%s", passwd);
         getchar();
-        printf("    请再次输入密码：");
+        printf("        请再次输入密码：");
         scanf("%s", passwd2);
         getchar();
         if(strcmp(passwd2, passwd)==0)
@@ -71,7 +95,7 @@ int Register()    //注意后期要查看是否重复名字
     fputs(passwd, fp);
     fputc('\n', fp);
     fclose(fp);
-    printf("    添加成功！\n");
+    printf("\n        添加成功！\n");
     return 1;
 }
 
@@ -90,16 +114,19 @@ int passwd_Verify(char passwd[])
     else return 0;
 }
 
-root_Verify(char passwd[])
+
+
+int root_Verify(char passwd[])
 {
+    FILE *fp;
     if(strcmp(passwd, "5201314")==0)
     {
-        printf("    验证成功！\n");
+        printf("        验证成功！\n");
         return OK;
     }
     else
     {
-        printf("    验证失败！\n");
+        printf("        验证失败！\n");
         return ERROR;
     }
 }
