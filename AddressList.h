@@ -4,9 +4,9 @@
 #define OK 1
 
 char name[20];
-char category[10];
-char phone[11];
-char qq[10];
+char category[20];
+char phone[20];
+char qq[20];
 char email[20];
 char places[50];
 
@@ -16,16 +16,22 @@ int SearchAddress(char input[])
     FILE *fp;
     fp = fopen(input, "r");
     fgets(name, 20, fp);
+    name[strlen(name)-1] = '\0';
     printf("        姓名：%s\n", name);
     fgets(category, 20, fp);
+    category[strlen(category)-1] = '\0';
     printf("        标签：%s\n", category);
     fgets(phone, 20, fp);
+    phone[strlen(phone)-1] = '\0';
     printf("        手机号码：%s\n", phone);
     fgets(qq, 20, fp);
+    qq[strlen(qq)-1] = '\0';
     printf("        QQ号码：%s\n", qq);
     fgets(email, 20, fp);
+    email[strlen(email)-1] = '\0';
     printf("        邮箱地址：%s\n", email);
     fgets(places, 50, fp);
+    places[strlen(places)-1] = '\0';
     printf("        家庭住址：%s\n", places);
     fclose(fp);
     printf("\n");
@@ -61,11 +67,11 @@ int ElasticSearch(char input[])
     fp = fopen("name.txt", "r");
     while(fgets(name, 20, fp)!=NULL)
     {
+        name[strlen(name)-1] = '\0';
         if(VerifyName(input, name)==1)
         {
             SearchAddress(name);
         }
-        printf("\n");
     }
     return OK;
 }
