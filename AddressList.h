@@ -3,11 +3,11 @@
 #define ERROR -1
 #define OK 1
 
-char name[20];
-char category[20];
-char phone[20];
-char qq[20];
-char email[20];
+char name[30];
+char category[30];
+char phone[30];
+char qq[30];
+char email[30];
 char places[50];
 
 int SearchAddress(char input[])
@@ -15,19 +15,19 @@ int SearchAddress(char input[])
     printf("\n");
     FILE *fp;
     fp = fopen(input, "r");
-    fgets(name, 20, fp);
+    fgets(name, 30, fp);
     name[strlen(name)-1] = '\0';
     printf("        姓名：%s\n", name);
-    fgets(category, 20, fp);
+    fgets(category, 30, fp);
     category[strlen(category)-1] = '\0';
     printf("        标签：%s\n", category);
-    fgets(phone, 20, fp);
+    fgets(phone, 30, fp);
     phone[strlen(phone)-1] = '\0';
     printf("        手机号码：%s\n", phone);
-    fgets(qq, 20, fp);
+    fgets(qq, 30, fp);
     qq[strlen(qq)-1] = '\0';
     printf("        QQ号码：%s\n", qq);
-    fgets(email, 20, fp);
+    fgets(email, 30, fp);
     email[strlen(email)-1] = '\0';
     printf("        邮箱地址：%s\n", email);
     fgets(places, 50, fp);
@@ -38,26 +38,20 @@ int SearchAddress(char input[])
     return OK;
 }
 
-int VerifyName(char name[], char getstr[])
+int VerifyName(char comp[], char getstr[])
 {
     int i, j;
     i=j=0;
-    while(i<strlen(name)-1 && j<strlen(getstr)-1)
+    while(i<strlen(comp) && j<=strlen(getstr))
     {
-        if(name[i]==getstr[j])
+        if(comp[i]==getstr[j] && comp[i+1]==getstr[j+1])
         {
-            i++; j++;
+            i+=2; j+=2;
         }
-        else j++;
+        else j+=2;
 
-        if(i==strlen(name)-1 && j<strlen(getstr)-1)
-        {
-            return OK;
-        }
-        else if(i<strlen(name)-1 && j==strlen(getstr)-1)
-        {
-            return ERROR;
-        }
+        if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
+        else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
     }
 }
 
