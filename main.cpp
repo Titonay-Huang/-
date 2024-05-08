@@ -8,8 +8,7 @@
 int main()
 {
     int status=0, t;
-    FILE *fp;
-    char input[MAX_LENGTH], temp[MAX_LENGTH];
+    char input[MAX_LENGTH];
     while(1)
     {
         if(status==0)
@@ -44,6 +43,7 @@ int main()
             }
 
         }
+
         else if(status == 1)
         {
             printf("\n");

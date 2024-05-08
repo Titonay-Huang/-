@@ -5,24 +5,24 @@
 #define MAX_LENGTH 50
 
 int flag=0, a;
-char user[MAX_LENGTH];
+char user[MAX_LENGTH], face[MAX_LENGTH];
 
 int get_Flag_all()
 {
     flag=0;
     FILE *fp;
     char name[MAX_LENGTH];
-    fp = fopen("login.txt", "r");
+    fp = fopen("login", "r");
     while(fgets(name, sizeof(name), fp) != NULL)
         flag++;
     return flag;
 }
 
-int repeat_Verify(char input[])
+int repeat_LoginVerify(char input[])
 {
     FILE *fp;
     flag=0;
-    fp = fopen("login.txt", "r");
+    fp = fopen("login", "r");
     if(fp==NULL) return ERROR;
     while(fgets(user, MAX_LENGTH, fp)!=NULL)
     {
@@ -34,19 +34,38 @@ int repeat_Verify(char input[])
         }
     }
     if(flag==1) return ERROR;
-    else return OK;
+    else return OK;  //已存在则返回-1， 不存在则返回1
+}
+
+int repeat_NameVerify(char input[])
+{
+    FILE *fp;
+    flag=0;
+    fp = fopen("name", "r");
+    if(fp==NULL) return ERROR;
+    while(fgets(user, MAX_LENGTH, fp)!=NULL)
+    {
+        user[strlen(user)-1] = '\0';
+        if(strcmp(user, input)==0)
+        {
+            flag=1;
+            break;
+        }
+    }
+    if(flag==1) return ERROR;
+    else return OK;  //已存在则返回-1， 不存在则返回1
 }
 
 int Register()    //注意后期要查看是否重复名字
 {
     FILE *fp;
     char name[MAX_LENGTH], passwd[MAX_LENGTH], passwd2[MAX_LENGTH];
-    fp = fopen("login.txt", "a+");
+    fp = fopen("login", "a+");
     if(fp==NULL) return 0;
     printf("\n        请输入你要注册的用户名：");
     scanf("%s", name);
     getchar();
-    if(repeat_Verify(name)==-1)
+    if(repeat_LoginVerify(name)==-1)
     {
         printf("\n        < 用户名已被使用 >\n");
         return ERROR;
@@ -70,7 +89,7 @@ int Register()    //注意后期要查看是否重复名字
         else printf("\n        < 密码不一致 >\n\n");
     }
     if(a<0) return ERROR;
-    fp = fopen("passwd.txt", "a+");
+    fp = fopen("passwd", "a+");
     fputs(passwd, fp);
     fputc('\n', fp);
     fclose(fp);
@@ -83,7 +102,7 @@ int passwd_Verify(char passwd[])
     FILE *fp;
     int i;
     char verify[MAX_LENGTH];
-    fp = fopen("passwd.txt", "r");
+    fp = fopen("passwd", "r");
     for(i=0; i<=flag; i++)
     {
         fgets(verify, MAX_LENGTH, fp);
@@ -99,7 +118,7 @@ int root_Verify(char passwd[])
 {
     FILE *fp;
     char getpasswd[MAX_LENGTH];
-    fp = fopen("rootpasswd.txt", "r");
+    fp = fopen("rootpasswd", "r");
     if(fp==NULL) return ERROR;
     fgets(getpasswd, MAX_LENGTH, fp);
     getpasswd[strlen(getpasswd)-1] = '\0';
@@ -144,7 +163,7 @@ int Signin(char input[])
 {
     FILE *fp;
     char name[MAX_LENGTH];
-    fp = fopen("login.txt", "r");
+    fp = fopen("login", "r");
     while(1)
     {
         if(fgets(name, sizeof(name), fp) == NULL) return ERROR;
@@ -152,7 +171,7 @@ int Signin(char input[])
         name[strlen(name)-1] = '\0';
         if(strcmp(input, name)==0)
         {
-            strcpy(user, name);
+            strcpy(face, name);
             return flag;
         }
         memset(name,'\0',sizeof(name));
@@ -185,6 +204,7 @@ int user_Signin()
             getchar();
         }
     }
+    if(a<0) return ERROR;
     a=3;
     while(a--)
     {
@@ -201,7 +221,7 @@ int user_Signin()
             getchar();
         }
     }
-
+    if(a<0) return ERROR;
     return OK;
 }
 

@@ -16,6 +16,7 @@ int SearchAddress(char input[])
     printf("\n");
     FILE *fp;
     fp = fopen(input, "r");
+    if(fp==NULL) return ERROR;
     fgets(name, MAX_LENGTH, fp);
     name[strlen(name)-1] = '\0';
     printf("        姓名：%s\n", name);
@@ -72,7 +73,7 @@ int ElasticSearch(char input[])
 {
     FILE *fp;
     flag=0;
-    fp = fopen("name.txt", "r");
+    fp = fopen("name", "r");
     while(fgets(name, MAX_LENGTH, fp)!=NULL)
     {
         name[strlen(name)-1] = '\0';
@@ -90,14 +91,14 @@ int CheckNewCategory(char test[])
 {
     FILE *fp;
     char temp[MAX_LENGTH];
-    fp = fopen("category.txt", "r");
+    fp = fopen("category", "a+");
     if(fp==NULL) return ERROR;
     while(fgets(temp, MAX_LENGTH, fp)!=NULL)
     {
         temp[strlen(temp)-1] = '\0';
         if(strcmp(temp, test)==0) return ERROR;
     }
-    fputs(temp, fp);
+    fputs(test, fp);
     fputc('\n', fp);
     fclose(fp);
     return OK;
@@ -118,7 +119,11 @@ int EnterAddress()
         printf("        联系人的名字是最基础的信息！");
         return ERROR;
     }
-
+    if(repeat_NameVerify(name)!=1 && fopen("name", "r")!=NULL)
+    {
+        printf("\n       < 此联系人信息已保存 >\n");
+        return ERROR;
+    }
     printf("        请输入11位手机号码（若无则填无）：");
     scanf("%s", phone);
     getchar();
@@ -133,7 +138,7 @@ int EnterAddress()
     scanf("%s", places);
     getchar();
 
-    fp = fopen("name.txt", "a+");
+    fp = fopen("name", "a+");
     if(fp==NULL) return ERROR;
     fputs(name, fp);
     fputc('\n', fp);
@@ -214,7 +219,7 @@ int LoadAddress()
     int Flag;
     Flag = 0;
     printf("\n");
-    fp = fopen("name.txt", "r");
+    fp = fopen("name", "r");
     if(fp==NULL)
     {
         printf("\n        < 此系统通讯录信息为空 >\n");
@@ -232,10 +237,11 @@ int LoadAddress()
     fclose(fp);
     return OK;
 }
+
 int Delfilestr(FILE *file, char delstr[])
 {
     FILE *fp;
-    fp = fopen("channel.txt", "w");
+    fp = fopen("channel", "w");
     if(fp == NULL) return ERROR;
     char getstr[MAX_LENGTH];
     while(fgets(getstr, MAX_LENGTH, file) != NULL)
@@ -246,6 +252,7 @@ int Delfilestr(FILE *file, char delstr[])
              fputs(getstr, fp);
              fputc('\n', fp);
         }
+        memset(getstr,'\0',sizeof(getstr));
     }
     fclose(fp);
 }
@@ -253,16 +260,16 @@ int Delfilestr(FILE *file, char delstr[])
 int DelAddress()
 {
     FILE *fp, *fpname, *fpcategory;
-    char input[MAX_LENGTH];
     int i;
+    char input[MAX_LENGTH];
     printf("        请输入你所要删除联系人的名字：");
     scanf("%s", name);
+    getchar();
     fp = fopen(name, "r");
-    fpname = fopen("name.txt", "r");
 
     if(fp==NULL || fpname==NULL)
     {
-        printf("\n        < 此联系人的信息不存在！请输入全名 >\n");
+        printf("\n        < 此联系人的信息不存在或请输入全名 >\n");
         return ERROR;
     }
 
@@ -271,21 +278,23 @@ int DelAddress()
     getchar();
     if(strcmp(input, "yes")!=0) {printf("\n        < 取消操作成功 >\n"); return ERROR;}
 
+    fgets(name, MAX_LENGTH, fp);
+    name[strlen(name)-1] = '\0';
+    fpname = fopen("name", "r");
+    if(fpname==NULL) return ERROR;
     Delfilestr(fpname, name);
     fclose(fpname);
-    remove("name.txt");
-    rename("channel.txt", "name.txt");
+    remove("name");
+    rename("channel", "name");
 
-
-    for(i=1; i<=2; i++)
-        fgets(category, MAX_LENGTH, fp);
+    fgets(category, MAX_LENGTH, fp);
     category[strlen(category)-1] = '\0';
     fpcategory = fopen(category, "r");
     if(fpcategory==NULL) return ERROR;
     Delfilestr(fpcategory, name);
     fclose(fpcategory);
     remove(category);
-    rename("channel.txt", category);
+    rename("channel", category);
 
     fclose(fp);
     remove(name);
@@ -314,7 +323,7 @@ int CheckCategory()
     }
     else printf("\n        < 此标签不存在 >\n");
     if(flag==0 && fp!=NULL){
-        printf("        < 此标签内联系人为空 >\n");
+        printf("\n        < 此标签内联系人为空 >\n");
     }
     fclose(fp);
     printf("\n        标签内联系人共有 %d 个", flag);
@@ -326,7 +335,7 @@ int LoadCategory()
     char temp[MAX_LENGTH];
     FILE *fp;
     flag=0;
-    fp = fopen("category.txt", "r");
+    fp = fopen("category", "r");
     if(fp==NULL)
     {
         printf("\n        < 暂时还没有标签 >\n");
