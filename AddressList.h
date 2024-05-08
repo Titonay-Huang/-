@@ -53,7 +53,6 @@ int VerifyName(char comp[], char getstr[])
             if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
             else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
         }
-
     }
 
     else if(comp[i]>0 && getstr[j]>0)
@@ -65,7 +64,6 @@ int VerifyName(char comp[], char getstr[])
             if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
             else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
         }
-
     }
 }
 
@@ -83,6 +81,7 @@ int ElasticSearch(char input[])
             SearchAddress(name);
         }
     }
+    fclose(fp);
     if(flag==0) printf("\n        < 找不到对应的联系人 >\n");
     return OK;
 }
@@ -260,6 +259,7 @@ int Delfilestr(FILE *file, char delstr[])
 int DelAddress()
 {
     FILE *fp, *fpname, *fpcategory;
+    char file_name[]="name", old_name[]="channel";
     int i;
     char input[MAX_LENGTH];
     printf("        请输入你所要删除联系人的名字：");
@@ -284,8 +284,8 @@ int DelAddress()
     if(fpname==NULL) return ERROR;
     Delfilestr(fpname, name);
     fclose(fpname);
-    remove("name");
-    rename("channel", "name");
+    remove(file_name);
+    rename(old_name, file_name);
 
     fgets(category, MAX_LENGTH, fp);
     category[strlen(category)-1] = '\0';
@@ -349,5 +349,6 @@ int LoadCategory()
         flag++;
     }
     printf("\n        共有标签 %d 个", flag);
+    fclose(fp);
     return OK;
 }

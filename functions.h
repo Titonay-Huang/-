@@ -15,6 +15,7 @@ int get_Flag_all()
     fp = fopen("login", "r");
     while(fgets(name, sizeof(name), fp) != NULL)
         flag++;
+    fclose(fp);
     return flag;
 }
 
@@ -33,6 +34,7 @@ int repeat_LoginVerify(char input[])
             break;
         }
     }
+    fclose(fp);
     if(flag==1) return ERROR;
     else return OK;  //已存在则返回-1， 不存在则返回1
 }
@@ -52,6 +54,7 @@ int repeat_NameVerify(char input[])
             break;
         }
     }
+    fclose(fp);
     if(flag==1) return ERROR;
     else return OK;  //已存在则返回-1， 不存在则返回1
 }
@@ -108,6 +111,7 @@ int passwd_Verify(char passwd[])
         fgets(verify, MAX_LENGTH, fp);
     }
     verify[strlen(verify)-1] = '\0';
+    fclose(fp);
     if(strcmp(verify, passwd)==0) return 1;
     else return 0;
 }
@@ -122,6 +126,7 @@ int root_Verify(char passwd[])
     if(fp==NULL) return ERROR;
     fgets(getpasswd, MAX_LENGTH, fp);
     getpasswd[strlen(getpasswd)-1] = '\0';
+    fclose(fp);
     if(strcmp(passwd, getpasswd)==0)
     {
         printf("\n        < 验证成功 >\n");
