@@ -25,52 +25,24 @@ int main()
             printf("        请输入您需要的功能编号：");
             scanf("%d", &t);
             getchar();
-            if(t==1)
+            switch(t)
             {
-                printf("        请先输入管理员密码，以获得账号注册权限：");
-                scanf("%s", input);
-                getchar();
-                if(root_Verify(input)!=1) continue;
-                get_Flag_all();
-                Register();
+                case 1 :
+                    root_Power();
+                    break;
+                case 2 :
+                    if(user_Signin()==1) status=1;
+                    break;
+                case 3 :
+                    if(root_Signin()==1) status=2;
+                    break;
+                case 4 :
+                    exit(0);
+                default:
+                    printf("\n        < 暂时无此命令 >\n");
+                    break;
             }
-            else if(t==2)
-            {
-                if(Signin()!=-1)
-                {
-                    printf("        用户存在，请输入密码：");
-                    scanf("%s", input);
-                    getchar();
-                    putchar('\n');
-                    if(passwd_Verify(input))
-                    {
-                        printf("        密码正确，登陆成功！\n        欢迎进入通讯录系统！\n");
-                        status = 1;
-                    }
-                    else
-                    {
-                        printf("        密码错误！\n");
-                    }
-                }
-                else
-                {
-                    printf("        用户不存在！\n");
-                }
-            }
-            else if(t==3)
-            {
-                printf("        请输入管理员登陆密码：");
-                scanf("%s", input);
-                if(root_Verify(input)==1) status=2;
-            }
-            else if(t==4)
-            {
-                exit(0);
-            }
-            else
-            {
-                printf("        输入无效！不存在此命令！ ");
-            }
+
         }
         else if(status == 1)
         {
@@ -100,10 +72,12 @@ int main()
                 case 3 :
                     printf("        请输入要修改的联系人名字：");
                     scanf("%s", input);
-                    if(ModifyAddress(input)!=-1) printf("        联系人信息修改成功！\n");
-                    else                         printf("        联系人不存在，修改信息失败！");
+                    if(ModifyAddress(input)!=-1) printf("        < 联系人信息修改成功 >\n");
+                    else                         printf("        < 联系人不存在，修改信息失败 >");
                     break;
-                case 4 :EnterAddress(); break;
+                case 4 :
+                    EnterAddress();
+                    break;
                 case 5 :
                     LoadAddress();
                     break;
@@ -115,10 +89,10 @@ int main()
                     break;
                 case 8 :
                     status=0;
-                    printf("\n        退出登录成功\n");
+                    printf("\n        < 退出登录成功 >\n");
                     break;
                 default:
-                    printf("\n        暂时无此命令！\n");
+                    printf("\n        < 暂时无此命令 >\n");
                     break;
             }
         }
@@ -147,7 +121,7 @@ int main()
                 case 3 :
 
                 case 4 :
-                case 5 :status=0; printf("\n        退出登录成功\n");break;
+                case 5 :status=0; printf("\n        < 退出登录成功 >\n");break;
             }
         }
 

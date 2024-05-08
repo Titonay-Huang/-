@@ -43,39 +43,46 @@ int VerifyName(char comp[], char getstr[])
 {
     int i, j;
     i=j=0;
-    while(i<strlen(comp) && j<=strlen(getstr))
+    if(comp[i]<0 && getstr[j]<0)
     {
-        if(comp[i]<0 && getstr[j]<0)
+        while(i<strlen(comp) && j<strlen(getstr))
         {
-            if(comp[i]==getstr[j] && comp[i+1]==getstr[j+1])
-                {i+=2; j+=2;}
+            if(comp[i]==getstr[j] && comp[i+1]==getstr[j+1]) {i+=2; j+=2;}
+            else j+=2;
+            if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
+            else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
         }
-        else if(comp[i]>0 && getstr[j]>0)
-        {
-            if(comp[i]==getstr[j])
-            {
-                i+=2; j+=2;
-            }
-        }
-        else j+=2;
 
-        if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
-        else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
+    }
+
+    else if(comp[i]>0 && getstr[j]>0)
+    {
+        while(i<strlen(comp) && j<strlen(getstr))
+        {
+            if(comp[i]==getstr[j]) {i++; j++;}
+            else j++;
+            if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
+            else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
+        }
+
     }
 }
 
 int ElasticSearch(char input[])
 {
     FILE *fp;
+    flag=0;
     fp = fopen("name.txt", "r");
     while(fgets(name, MAX_LENGTH, fp)!=NULL)
     {
         name[strlen(name)-1] = '\0';
         if(VerifyName(input, name)==1)
         {
+            flag++;
             SearchAddress(name);
         }
     }
+    if(flag==0) printf("\n        < 找不到对应的联系人 >\n");
     return OK;
 }
 
