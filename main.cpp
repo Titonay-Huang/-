@@ -80,8 +80,8 @@ int main()
             printf("    *  用户 %-20s 你好，请选择功能：*\n", user);
             printf("    *    1、查找联系人          2、删除联系人      *\n");
             printf("    *    3、修改联系人信息      4、增加联系人      *\n");
-            printf("    *    5、列出所有联系人      6、列出联系人标签  *\n");
-            printf("    *    7、退出登录                               *\n");
+            printf("    *    5、列出所有联系人      6、列出标签种类    *\n");
+            printf("    *    7、查看标签内联系人    8、退出登录        *\n");
             printf("    *                                              *\n");
             printf("    ************************************************\n");
             printf("        请输入您需要的功能编号：");
@@ -100,41 +100,26 @@ int main()
                 case 3 :
                     printf("        请输入要修改的联系人名字：");
                     scanf("%s", input);
-                    if(ModifyAddress(input)!=-1)
-                    {
-                        printf("        联系人信息修改成功！\n");
-                    }
-                    else
-                    {
-                        printf("        联系人不存在，修改信息失败！");
-                    }
+                    if(ModifyAddress(input)!=-1) printf("        联系人信息修改成功！\n");
+                    else                         printf("        联系人不存在，修改信息失败！");
                     break;
                 case 4 :EnterAddress(); break;
                 case 5 :
                     LoadAddress();
                     break;
                 case 6 :
-                    flag = 0;
-                    printf("        请输入你要查看的标签列表（家人，朋友，工作，客服）：");
-                    scanf("%s", input);
-                    getchar();
-                    fp = fopen(input, "r");
-                    if(fp!=NULL){
-                        printf("        标签内联系人如下：\n\n");
-                        while(fgets(temp, MAX_LENGTH, fp)!=NULL)
-                        {
-                            temp[strlen(temp)-1] = '\0';
-                            printf("        * %s *\n", temp);
-                            flag++;
-                        }
-                    }
-                    else printf("\n        此标签不存在！\n");
-                    if(flag==0 && fp!=NULL){
-                        printf("        此标签内联系人为空！\n");
-                    }
-                    fclose(fp);
+                    LoadCategory();
                     break;
-                case 7 :status=0; printf("\n        退出登录成功\n");break;
+                case 7 :
+                    CheckCategory();
+                    break;
+                case 8 :
+                    status=0;
+                    printf("\n        退出登录成功\n");
+                    break;
+                default:
+                    printf("\n        暂时无此命令！\n");
+                    break;
             }
         }
         else if(status == 2)
