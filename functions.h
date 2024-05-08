@@ -2,16 +2,16 @@
 #include <string.h>
 #define ERROR -1
 #define OK 1
-#define MAX_USERS 100
+#define MAX_LENGTH 50
 
 int flag=0;
-char user[20];
+char user[MAX_LENGTH];
 
 int get_Flag_all()
 {
     flag=0;
     FILE *fp;
-    char name[20];
+    char name[MAX_LENGTH];
     fp = fopen("login.txt", "r");
     while(fgets(name, sizeof(name), fp) != NULL)
         flag++;
@@ -21,7 +21,7 @@ int get_Flag_all()
 int Signin()
 {
     FILE *fp;
-    char name[50], input[50];
+    char name[MAX_LENGTH], input[MAX_LENGTH];
     printf("        请输入用户名：");
     scanf("%s", input);
     getchar();
@@ -48,7 +48,7 @@ int repeat_Verify(char input[])
     flag=0;
     fp = fopen("login.txt", "r");
     if(fp==NULL) return ERROR;
-    while(fgets(user, 20, fp)!=NULL)
+    while(fgets(user, MAX_LENGTH, fp)!=NULL)
     {
         user[strlen(user)-1] = '\0';
         if(strcmp(user, input)==0)
@@ -64,7 +64,7 @@ int repeat_Verify(char input[])
 int Register()    //注意后期要查看是否重复名字
 {
     FILE *fp;
-    char name[20], passwd[20], passwd2[20];
+    char name[MAX_LENGTH], passwd[MAX_LENGTH], passwd2[MAX_LENGTH];
     fp = fopen("login.txt", "a+");
     if(fp==NULL) return 0;
     printf("        请输入你要注册的用户名：");
@@ -103,11 +103,11 @@ int passwd_Verify(char passwd[])
 {
     FILE *fp;
     int i;
-    char verify[20];
+    char verify[MAX_LENGTH];
     fp = fopen("passwd.txt", "r");
     for(i=0; i<=flag; i++)
     {
-        fgets(verify, 20, fp);
+        fgets(verify, MAX_LENGTH, fp);
     }
     verify[strlen(verify)-1] = '\0';
     if(strcmp(verify, passwd)==0) return 1;

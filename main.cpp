@@ -3,12 +3,13 @@
 #include <cstring>
 #include "functions.h"
 #include "AddressList.h"
+#define MAX_LENGTH 50
 
 int main()
 {
     int status=0, t;
     FILE *fp;
-    char input[20], temp[20];
+    char input[MAX_LENGTH], temp[MAX_LENGTH];
     while(1)
     {
         if(status==0)
@@ -120,7 +121,7 @@ int main()
                     fp = fopen(input, "r");
                     if(fp!=NULL){
                         printf("        标签内联系人如下：\n\n");
-                        while(fgets(temp, 20, fp)!=NULL)
+                        while(fgets(temp, MAX_LENGTH, fp)!=NULL)
                         {
                             temp[strlen(temp)-1] = '\0';
                             printf("        * %s *\n", temp);

@@ -2,19 +2,30 @@
 #include <string.h>
 #define ERROR -1
 #define OK 1
+#define MAX_LENGTH 50
 
+<<<<<<< HEAD
 char name[30];
 char category[30];
 char phone[30];
 char qq[30];
 char email[30];
 char places[50];
+=======
+char name[MAX_LENGTH];
+char category[MAX_LENGTH];
+char phone[MAX_LENGTH];
+char qq[MAX_LENGTH];
+char email[MAX_LENGTH];
+char places[MAX_LENGTH];
+>>>>>>> 6fcf763 (nearly)
 
 int SearchAddress(char input[])
 {
     printf("\n");
     FILE *fp;
     fp = fopen(input, "r");
+<<<<<<< HEAD
     fgets(name, 30, fp);
     name[strlen(name)-1] = '\0';
     printf("        姓名：%s\n", name);
@@ -28,9 +39,24 @@ int SearchAddress(char input[])
     qq[strlen(qq)-1] = '\0';
     printf("        QQ号码：%s\n", qq);
     fgets(email, 30, fp);
+=======
+    fgets(name, MAX_LENGTH, fp);
+    name[strlen(name)-1] = '\0';
+    printf("        姓名：%s\n", name);
+    fgets(category, MAX_LENGTH, fp);
+    category[strlen(category)-1] = '\0';
+    printf("        标签：%s\n", category);
+    fgets(phone, MAX_LENGTH, fp);
+    phone[strlen(phone)-1] = '\0';
+    printf("        手机号码：%s\n", phone);
+    fgets(qq, MAX_LENGTH, fp);
+    qq[strlen(qq)-1] = '\0';
+    printf("        QQ号码：%s\n", qq);
+    fgets(email, MAX_LENGTH, fp);
+>>>>>>> 6fcf763 (nearly)
     email[strlen(email)-1] = '\0';
     printf("        邮箱地址：%s\n", email);
-    fgets(places, 50, fp);
+    fgets(places, MAX_LENGTH, fp);
     places[strlen(places)-1] = '\0';
     printf("        家庭住址：%s\n", places);
     fclose(fp);
@@ -50,7 +76,11 @@ int VerifyName(char comp[], char getstr[])
         }
         else j+=2;
 
+<<<<<<< HEAD
         if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
+=======
+        if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
+>>>>>>> 6fcf763 (nearly)
         else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
     }
 }
@@ -59,7 +89,7 @@ int ElasticSearch(char input[])
 {
     FILE *fp;
     fp = fopen("name.txt", "r");
-    while(fgets(name, 20, fp)!=NULL)
+    while(fgets(name, MAX_LENGTH, fp)!=NULL)
     {
         name[strlen(name)-1] = '\0';
         if(VerifyName(input, name)==1)
@@ -186,7 +216,7 @@ int LoadAddress()
         printf("        此系统通讯录信息为空！\n");
         return 0;
     }
-    while(fgets(name, 20, fp)!=NULL)
+    while(fgets(name, MAX_LENGTH, fp)!=NULL)
     {
         name[strlen(name)-1] = '\0';
         printf("        * %s *\n", name);
