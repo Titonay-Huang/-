@@ -45,9 +45,17 @@ int VerifyName(char comp[], char getstr[])
     i=j=0;
     while(i<strlen(comp) && j<=strlen(getstr))
     {
-        if(comp[i]==getstr[j] && comp[i+1]==getstr[j+1])
+        if(comp[i]<0 && getstr[j]<0)
         {
-            i+=2; j+=2;
+            if(comp[i]==getstr[j] && comp[i+1]==getstr[j+1])
+                {i+=2; j+=2;}
+        }
+        else if(comp[i]>0 && getstr[j]>0)
+        {
+            if(comp[i]==getstr[j])
+            {
+                i+=2; j+=2;
+            }
         }
         else j+=2;
 
@@ -92,7 +100,7 @@ int EnterAddress()
 {
     FILE *fp;
 
-    printf("        请输入要添加的联系人的类别标签(家人，朋友，工作，客服, 自定义）：");
+    printf("        请输入要添加的联系人的类别标签(如家人，朋友，工作，客服, 自定义）：");
     scanf("%s", category);
     getchar();
     printf("        请输入联系人的名字：");
@@ -149,7 +157,7 @@ int EnterAddress()
     fputc('\n', fp);
     fclose(fp);
 
-    printf("\n        创建联系人成功！\n");
+    printf("\n         < 创建联系人成功 >\n");
     return OK;
 }
 
@@ -202,9 +210,10 @@ int LoadAddress()
     fp = fopen("name.txt", "r");
     if(fp==NULL)
     {
-        printf("        此系统通讯录信息为空！\n");
+        printf("\n        < 此系统通讯录信息为空 >\n");
         return 0;
     }
+    printf("        系统内所有联系人如下：\n\n");
     while(fgets(name, MAX_LENGTH, fp)!=NULL)
     {
         name[strlen(name)-1] = '\0';
@@ -212,7 +221,7 @@ int LoadAddress()
         Flag++;
     }
     printf("\n        联系人共有 %d 个", Flag);
-    if(Flag==0) printf("        此系统通讯录信息为空！\n");
+    if(Flag==0) printf("        < 此系统通讯录信息为空 >\n");
     fclose(fp);
     return OK;
 }
@@ -246,14 +255,14 @@ int DelAddress()
 
     if(fp==NULL || fpname==NULL)
     {
-        printf("\n        此联系人的信息不存在！请输入全名！\n");
+        printf("\n        < 此联系人的信息不存在！请输入全名 >\n");
         return ERROR;
     }
 
-    printf("\n        请问确定要删除联系人 %s 吗？确定的话请输入 yes 这个完整的单词：", name);
+    printf("        请问确定要删除联系人 %s 吗？确定的话请输入 yes 这个完整的单词：", name);
     scanf("%s", input);
     getchar();
-    if(strcmp(input, "yes")!=0) {printf("\n        取消操作成功。"); return ERROR;}
+    if(strcmp(input, "yes")!=0) {printf("\n        < 取消操作成功 >\n"); return ERROR;}
 
     Delfilestr(fpname, name);
     fclose(fpname);
@@ -274,7 +283,7 @@ int DelAddress()
     fclose(fp);
     remove(name);
 
-    printf("\n        联系人删除成功！\n");
+    printf("\n        < 联系人删除成功 >\n");
     return OK;
 }
 
@@ -283,12 +292,12 @@ int CheckCategory()
     flag = 0;
     FILE *fp;
     char input[MAX_LENGTH], temp[MAX_LENGTH];
-    printf("        请输入你要查看的标签列表（家人，朋友，工作，其他）：");
+    printf("        请输入你要查看的标签列表（如家人，朋友，工作，其他）：");
     scanf("%s", input);
     getchar();
     fp = fopen(input, "r");
     if(fp!=NULL){
-        printf("        标签内联系人如下：\n\n");
+        printf("\n        标签内联系人如下：\n\n");
         while(fgets(temp, MAX_LENGTH, fp)!=NULL)
         {
             temp[strlen(temp)-1] = '\0';
@@ -296,11 +305,12 @@ int CheckCategory()
             flag++;
         }
     }
-    else printf("\n        此标签不存在！\n");
+    else printf("\n        < 此标签不存在 >\n");
     if(flag==0 && fp!=NULL){
-        printf("        此标签内联系人为空！\n");
+        printf("        < 此标签内联系人为空 >\n");
     }
     fclose(fp);
+    printf("\n        标签内联系人共有 %d 个", flag);
     return OK;
 }
 
@@ -308,17 +318,20 @@ int LoadCategory()
 {
     char temp[MAX_LENGTH];
     FILE *fp;
+    flag=0;
     fp = fopen("category.txt", "r");
     if(fp==NULL)
     {
-        printf("\n        暂时还没有标签!\n");
+        printf("\n        < 暂时还没有标签 >\n");
         return ERROR;
     }
-    printf("\n");
+    printf("\n        已定义的标签如下：\n\n");
     while(fgets(temp, MAX_LENGTH, fp)!=NULL)
     {
         temp[strlen(temp)-1] = '\0';
         printf("        * %s *\n", temp);
+        flag++;
     }
+    printf("\n        共有标签 %d 个", flag);
     return OK;
 }
