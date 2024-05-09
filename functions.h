@@ -29,11 +29,10 @@ int repeat_LoginVerify(char input[])
     while(fgets(user, MAX_LENGTH, fp)!=NULL)
     {
         user[strlen(user)-1] = '\0';
-        flag++;
         if(strcmp(user, input)==0) break;
+        flag++;
     }
     fclose(fp);
-    flag -= 1;
     if(flag==0) return OK;
     else return flag;  //已存在则返回-1， 不存在则返回1
 }
@@ -65,7 +64,7 @@ int Register()    //注意后期要查看是否重复名字
     char name[MAX_LENGTH], passwd[MAX_LENGTH], passwd2[MAX_LENGTH];
     fp = fopen("login", "a+");
     if(fp==NULL) return 0;
-    printf("        请输入你要注册的用户名：");
+    printf("\n        请输入你要注册的用户名：");
     scanf("%s", name);
     getchar();
     if(repeat_LoginVerify(name)==-1)
@@ -167,21 +166,29 @@ int root_Power()
 int Signin(char input[])
 {
     FILE *fp;
+    int a=0;;
     char name[MAX_LENGTH];
     fp = fopen("login", "r");
-    while(1)
+    if(fp == NULL)
     {
-        if(fgets(name, sizeof(name), fp) == NULL) return ERROR;
-        if(!name) return ERROR;
+        printf("\n        < 此系统还未注册用户 >\n");
+        return ERROR;
+    }
+    while(fgets(name, sizeof(name), fp) != NULL)
+    {
+
         name[strlen(name)-1] = '\0';
         if(strcmp(input, name)==0)
         {
             strcpy(face, name);
+            a=1;
+            break;
         }
         memset(name,'\0',sizeof(name));
         flag++;
     }
     fclose(fp);
+    if(a==0) return ERROR;
     return flag;
 }
 
@@ -298,10 +305,8 @@ int Deluserpasswd(char user[], int a)
     }
     fclose(fp);
     fclose(fpasswd);
-    if(remove("passwd")==0) printf("成功");
-    else printf("失败");
-    if(rename("channel", "passwd")==0) printf("成功");
-    else printf("失败");
+    remove("passwd");
+    rename("channel", "passwd");
     return OK;
 }
 
@@ -323,10 +328,8 @@ int Deluserstr(FILE *file, char delstr[])
     }
     fclose(fp);
     fclose(file);
-    if(remove("login")==0) printf("成功");
-    else printf("失败");
-    if(rename("channel", "login")==0) printf("成功");
-    else printf("失败");
+    remove("login");
+    rename("channel", "login");
     return OK;
 }
 
@@ -384,6 +387,7 @@ int Loaduser()
         printf("        * %s *\n", user);
         flag++;
     }
+    fclose(fp);
     printf("\n      共有用户 %d 个", flag);
     return OK;
 }
