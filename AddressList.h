@@ -172,46 +172,6 @@ int EnterAddress()
     return OK;
 }
 
-int ModifyAddress(char input[])
-{
-    FILE *fp;
-
-    printf("        请重新输入联系人标签：");
-    scanf("%s", category);
-    getchar();
-    printf("        请重新输入11位手机号码（若无则填无）：");
-    scanf("%s", phone);
-    getchar();
-
-    printf("        请重新输入qq号码（若无则填无）：");
-    scanf("%s", qq);
-    getchar();
-    printf("        请重新输入邮箱地址（若无则填无）：");
-    scanf("%s", email);
-    getchar();
-    printf("        请重新输入家庭住址（若无则填无）：");
-    scanf("%s", places);
-    getchar();
-
-    fp = fopen(input, "w");
-    if(fp==NULL) return ERROR;
-    fputs(input, fp);
-    fputc('\n', fp);
-    fputs(category, fp);
-    fputc('\n', fp);
-    fputs(phone, fp);
-    fputc('\n', fp);
-    fputs(qq, fp);
-    fputc('\n', fp);
-    fputs(email, fp);
-    fputc('\n', fp);
-    fputs(places, fp);
-    fputc('\n', fp);
-    fclose(fp);
-
-    return OK;
-}
-
 int LoadAddress()
 {
     FILE *fp;
@@ -273,7 +233,7 @@ int DelAddress()
         return ERROR;
     }
 
-    printf("        请问确定要删除联系人 %s 吗？确定的话请输入 yes 这个完整的单词：", name);
+    printf("        请问确定要删除联系人 * %s * 吗？确定的话请输入 yes 这个完整的单词：", name);
     scanf("%s", input);
     getchar();
     if(strcmp(input, "yes")!=0) {printf("\n        < 取消操作成功 >\n"); return ERROR;}
@@ -327,6 +287,69 @@ int CheckCategory()
     }
     fclose(fp);
     printf("\n        标签内联系人共有 %d 个", flag);
+    return OK;
+}
+
+int ModifyAddress(char input[])
+{
+    FILE *fp, *fpcategory;
+    int a;
+
+    fp = fopen(input, "r");
+    if(fp==NULL) return ERROR;
+
+    a=2;
+    while(a--) fgets(category, MAX_LENGTH, fp);
+    category[strlen(category)-1] = '\0';
+
+    fpcategory = fopen(category, "r");
+    if(fpcategory==NULL) return ERROR;
+    Delfilestr(fpcategory, input);
+    fclose(fpcategory);
+    fclose(fp);
+    remove(category);
+    rename("channel", category);
+
+    printf("        请重新输入联系人标签：");
+    scanf("%s", category);
+    getchar();
+    printf("        请重新输入11位手机号码（若无则填无）：");
+    scanf("%s", phone);
+    getchar();
+
+    printf("        请重新输入qq号码（若无则填无）：");
+    scanf("%s", qq);
+    getchar();
+    printf("        请重新输入邮箱地址（若无则填无）：");
+    scanf("%s", email);
+    getchar();
+    printf("        请重新输入家庭住址（若无则填无）：");
+    scanf("%s", places);
+    getchar();
+
+    fp = fopen(input, "w");
+    if(fp==NULL) return ERROR;
+    fputs(input, fp);
+    fputc('\n', fp);
+    fputs(category, fp);
+    fputc('\n', fp);
+    fputs(phone, fp);
+    fputc('\n', fp);
+    fputs(qq, fp);
+    fputc('\n', fp);
+    fputs(email, fp);
+    fputc('\n', fp);
+    fputs(places, fp);
+    fputc('\n', fp);
+    fclose(fp);
+
+    fpcategory = fopen(category, "a+");
+    fputs(input, fpcategory);
+    fputc('\n', fpcategory);
+    fclose(fpcategory);
+
+    CheckNewCategory(category);
+
     return OK;
 }
 
