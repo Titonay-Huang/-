@@ -5,7 +5,7 @@
 #define MAX_LENGTH 50
 
 int flag=0, a;
-char user[MAX_LENGTH], face[MAX_LENGTH];
+char face[MAX_LENGTH];
 
 int get_Flag_all()
 {
@@ -23,25 +23,25 @@ int repeat_LoginVerify(char input[])
 {
     FILE *fp;
     flag=0;
+    char user[MAX_LENGTH];
     fp = fopen("login", "r");
     if(fp==NULL) return ERROR;
     while(fgets(user, MAX_LENGTH, fp)!=NULL)
     {
         user[strlen(user)-1] = '\0';
-        if(strcmp(user, input)==0)
-        {
-            flag=1;
-            break;
-        }
+        flag++;
+        if(strcmp(user, input)==0) break;
     }
     fclose(fp);
-    if(flag==1) return ERROR;
-    else return OK;  //已存在则返回-1， 不存在则返回1
+    flag -= 1;
+    if(flag==0) return OK;
+    else return flag;  //已存在则返回-1， 不存在则返回1
 }
 
 int repeat_NameVerify(char input[])
 {
     FILE *fp;
+    char user[MAX_LENGTH];
     flag=0;
     fp = fopen("name", "r");
     if(fp==NULL) return ERROR;
@@ -56,7 +56,7 @@ int repeat_NameVerify(char input[])
     }
     fclose(fp);
     if(flag==1) return ERROR;
-    else return OK;  //已存在则返回-1， 不存在则返回1
+    else return flag;  //已存在则返回-1， 不存在则返回1
 }
 
 int Register()    //注意后期要查看是否重复名字
@@ -65,7 +65,7 @@ int Register()    //注意后期要查看是否重复名字
     char name[MAX_LENGTH], passwd[MAX_LENGTH], passwd2[MAX_LENGTH];
     fp = fopen("login", "a+");
     if(fp==NULL) return 0;
-    printf("\n        请输入你要注册的用户名：");
+    printf("        请输入你要注册的用户名：");
     scanf("%s", name);
     getchar();
     if(repeat_LoginVerify(name)==-1)
@@ -177,17 +177,18 @@ int Signin(char input[])
         if(strcmp(input, name)==0)
         {
             strcpy(face, name);
-            return flag;
         }
         memset(name,'\0',sizeof(name));
         flag++;
     }
     fclose(fp);
+    return flag;
 }
 
 
 int user_Signin()
 {
+    char user[MAX_LENGTH];
     a=3;
     printf("        请输入用户名：");
     scanf("%s", user);
@@ -258,7 +259,7 @@ int rewriteRootPasswd()
         printf("        请输入你的新密码：");
         scanf("%s", passwd);
         getchar();
-        printf("        请再次输入你的新密码：")
+        printf("        请再次输入你的新密码：");
         scanf("%s", passwd2);
         getchar();
         if(strcmp(passwd, passwd2)==0)
@@ -270,8 +271,119 @@ int rewriteRootPasswd()
             printf("\n        < 密码修改成功 >\n");
             return OK;
         }
-        printf("\n        < 密码修改失败 >\n");
+        printf("\n        < 密码修改失败，请重新输入 >\n\n");
+
+    }
+    return ERROR;
+}
+
+int Deluserpasswd(char user[], int a)
+{
+    FILE *fp, *fpasswd;
+    int i=0;
+    char passwd[MAX_LENGTH];
+    fp=fopen("passwd", "r");
+    if(fp==NULL) return ERROR;
+
+    fpasswd = fopen("channel", "w");
+    while(fgets(passwd, MAX_LENGTH, fp)!=NULL)
+    {
+        passwd[strlen(passwd)-1] = '\0';
+        if(i!=a)
+        {
+            fputs(passwd, fpasswd);
+            fputc('\n', fpasswd);
+        }
+        i++;
+    }
+    fclose(fp);
+    fclose(fpasswd);
+    if(remove("passwd")==0) printf("成功");
+    else printf("失败");
+    if(rename("channel", "passwd")==0) printf("成功");
+    else printf("失败");
+    return OK;
+}
+
+int Deluserstr(FILE *file, char delstr[])
+{
+    FILE *fp;
+    fp = fopen("channel", "w");
+    if(fp == NULL) return ERROR;
+    char getstr[MAX_LENGTH];
+    while(fgets(getstr, MAX_LENGTH, file) != NULL)
+    {
+        getstr[strlen(getstr)-1] = '\0';
+        if(strcmp(getstr, delstr)!=0)
+        {
+             fputs(getstr, fp);
+             fputc('\n', fp);
+        }
+        memset(getstr,'\0',sizeof(getstr));
+    }
+    fclose(fp);
+    fclose(file);
+    if(remove("login")==0) printf("成功");
+    else printf("失败");
+    if(rename("channel", "login")==0) printf("成功");
+    else printf("失败");
+    return OK;
+}
+
+int Deluser()
+{
+    char user[MAX_LENGTH];
+    FILE *fp;
+    printf("        请输入你要删除的用户的名字：");
+    scanf("%s", user);
+    getchar();
+
+    fp = fopen("login", "r");
+    if(fp==NULL)
+    {
+        printf("\n        < 此系统还没有任何的用户 >\n");
         return ERROR;
     }
+    fclose(fp);
 
+    fp = fopen("login", "r");
+    if(repeat_LoginVerify(user)==-1)
+    {
+        printf("\n        < 此用户不存在 >\n");
+        return ERROR;
+    }
+    else
+    {
+        if(Deluserpasswd(user,flag)==1 && Deluserstr(fp, user)==1)
+        {
+            printf("\n        < 用户删除成功 >\n");
+        }
+        else
+        {
+            printf("\n        < 用户删除失败 >\n");
+        }
+    }
+    return OK;
+}
+
+int Loaduser()
+{
+    FILE *fp;
+    flag=0;
+    char user[MAX_LENGTH];
+    fp = fopen("login", "r");
+    if(fp == NULL)
+    {
+        printf("\n        < 此系统中还没有注册用户 >\n");
+        return ERROR;
+    }
+    printf("        此系统中的用户如下：\n\n");
+    while(fgets(user, MAX_LENGTH, fp)!=NULL)
+    {
+        user[strlen(user)-1] = '\0';
+        printf("        * %s *\n", user);
+        flag++;
+    }
+    printf("\n      共有用户 %d 个", flag);
+    return OK;
 }

@@ -50,7 +50,7 @@ int VerifyName(char comp[], char getstr[])
         {
             if(comp[i]==getstr[j] && comp[i+1]==getstr[j+1]) {i+=2; j+=2;}
             else j+=2;
-            if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
+            if(i==strlen(comp) && j<=strlen(getstr)) return OK;
             else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
         }
     }
@@ -70,6 +70,7 @@ int VerifyName(char comp[], char getstr[])
 int ElasticSearch(char input[])
 {
     FILE *fp;
+    int flag;
     flag=0;
     fp = fopen("name", "r");
     while(fgets(name, MAX_LENGTH, fp)!=NULL)
@@ -227,7 +228,7 @@ int DelAddress()
     getchar();
     fp = fopen(name, "r");
 
-    if(fp==NULL || fpname==NULL)
+    if(fp==NULL)
     {
         printf("\n        < 此联系人的信息不存在或请输入全名 >\n");
         return ERROR;
