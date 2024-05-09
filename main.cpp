@@ -35,6 +35,7 @@ int main()
                     if(user_Signin()==1) status=1;
                     break;
                 case 3 :
+                    if()
                     if(root_Signin()==1) status=2;
                     break;
                 case 4 :
@@ -119,7 +120,7 @@ int main()
             switch(t)
             {
                 case 1 :
-
+                    rewriteRootPasswd();
                 case 2 :
 
                 case 3 :

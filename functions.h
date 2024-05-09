@@ -247,3 +247,31 @@ int root_Signin()
         }
     return ERROR;
 }
+
+int rewriteRootPasswd()
+{
+    char passwd[MAX_LENGTH], passwd2[MAX_LENGTH];
+    FILE *fp;
+    int a=3;
+    while(a--)
+    {
+        printf("        请输入你的新密码：");
+        scanf("%s", passwd);
+        getchar();
+        printf("        请再次输入你的新密码：")
+        scanf("%s", passwd2);
+        getchar();
+        if(strcmp(passwd, passwd2)==0)
+        {
+            fp=fopen("rootpasswd", "w");
+            fputs(passwd, fp);
+            fputc('\n', fp);
+            fclose(fp);
+            printf("\n        < 密码修改成功 >\n");
+            return OK;
+        }
+        printf("\n        < 密码修改失败 >\n");
+        return ERROR;
+    }
+
+}
