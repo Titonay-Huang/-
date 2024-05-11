@@ -32,7 +32,7 @@ int repeat_LoginVerify(char input[])
         if(strcmp(user, input)==0) {flag++; break;}
     }
     fclose(fp);
-    if(flag==0) return ERROR;
+    if(flag==1) return ERROR;
     else return OK;  //已存在则返回-1， 不存在则返回1
 }
 
@@ -283,7 +283,7 @@ int rewriteRootPasswd()
     return ERROR;
 }
 
-int Deluserpasswd(char user[], int a)
+int Deluserpasswd(int a)
 {
     FILE *fp, *fpasswd;
     int i=0;
@@ -312,7 +312,9 @@ int Deluserpasswd(char user[], int a)
 int Deluserstr(FILE *file, char delstr[])
 {
     FILE *fp;
+    int a=0;
     fp = fopen("channel", "w");
+    flag=0;
     if(fp == NULL) return ERROR;
     char getstr[MAX_LENGTH];
     while(fgets(getstr, MAX_LENGTH, file) != NULL)
@@ -323,7 +325,9 @@ int Deluserstr(FILE *file, char delstr[])
              fputs(getstr, fp);
              fputc('\n', fp);
         }
+        else flag=a;
         memset(getstr,'\0',sizeof(getstr));
+        a++;
     }
     fclose(fp);
     fclose(file);
@@ -346,23 +350,23 @@ int Deluser()
         printf("\n        < 此系统还没有任何的用户 >\n");
         return ERROR;
     }
-    fclose(fp);
 
-    fp = fopen("login", "r");
-    if(repeat_LoginVerify(user)==-1)
+    if(repeat_LoginVerify(user)==1)
     {
         printf("\n        < 此用户不存在 >\n");
         return ERROR;
     }
     else
     {
-        if(Deluserpasswd(user,flag)==1 && Deluserstr(fp, user)==1)
+        if(Deluserstr(fp, user)==1)
         {
-            printf("\n        < 用户删除成功 >\n");
+            if(Deluserpasswd(flag)==1)
+                printf("\n        < 用户删除成功 >\n");
+            else printf("\n        < 用户删除失败1 >\n");
         }
         else
         {
-            printf("\n        < 用户删除失败 >\n");
+            printf("\n        < 用户删除失败2 >\n");
         }
     }
     return OK;
