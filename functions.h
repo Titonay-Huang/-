@@ -29,12 +29,11 @@ int repeat_LoginVerify(char input[])
     while(fgets(user, MAX_LENGTH, fp)!=NULL)
     {
         user[strlen(user)-1] = '\0';
-        if(strcmp(user, input)==0) break;
-        flag++;
+        if(strcmp(user, input)==0) {flag++; break;}
     }
     fclose(fp);
-    if(flag==0) return OK;
-    else return flag;  //已存在则返回-1， 不存在则返回1
+    if(flag==0) return ERROR;
+    else return OK;  //已存在则返回-1， 不存在则返回1
 }
 
 int repeat_NameVerify(char input[])
@@ -55,7 +54,7 @@ int repeat_NameVerify(char input[])
     }
     fclose(fp);
     if(flag==1) return ERROR;
-    else return flag;  //已存在则返回-1， 不存在则返回1
+    else return OK;  //已存在则返回-1， 不存在则返回1
 }
 
 int Register()    //注意后期要查看是否重复名字
@@ -305,8 +304,8 @@ int Deluserpasswd(char user[], int a)
     }
     fclose(fp);
     fclose(fpasswd);
-    remove("passwd");
-    rename("channel", "passwd");
+    if(remove("passwd")!=0) return ERROR;
+    if(rename("channel", "passwd")!=0) return ERROR;
     return OK;
 }
 
@@ -328,8 +327,8 @@ int Deluserstr(FILE *file, char delstr[])
     }
     fclose(fp);
     fclose(file);
-    remove("login");
-    rename("channel", "login");
+    if(remove("login")!=0) return ERROR;
+    if(rename("channel", "login")!=0) return ERROR;
     return OK;
 }
 

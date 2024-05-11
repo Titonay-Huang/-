@@ -281,13 +281,14 @@ int CheckCategory()
             printf("        * %s *\n", temp);
             flag++;
         }
+        printf("\n        标签内联系人共有 %d 个", flag);
     }
     else printf("\n        < 此标签不存在 >\n");
     if(flag==0 && fp!=NULL){
         printf("\n        < 此标签内联系人为空 >\n");
     }
     fclose(fp);
-    printf("\n        标签内联系人共有 %d 个", flag);
+
     return OK;
 }
 
