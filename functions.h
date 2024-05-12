@@ -61,8 +61,7 @@ int Register()    //注意后期要查看是否重复名字
 {
     FILE *fp;
     char name[MAX_LENGTH], passwd[MAX_LENGTH], passwd2[MAX_LENGTH];
-    fp = fopen("login", "a+");
-    if(fp==NULL) return 0;
+
     printf("\n        请输入你要注册的用户名：");
     scanf("%s", name);
     getchar();
@@ -72,6 +71,8 @@ int Register()    //注意后期要查看是否重复名字
         return ERROR;
     }
     a=3;
+    fp = fopen("login", "a+");
+    if(fp==NULL) return 0;
     while(a--)
     {
         printf("        请设立密码：");
@@ -87,9 +88,9 @@ int Register()    //注意后期要查看是否重复名字
             fclose(fp);
             break;
         }
-        else printf("\n        < 密码不一致 >\n\n");
+        else {printf("\n        < 密码不一致 >\n\n");}
     }
-    if(a<0) return ERROR;
+    if(a<0) {fclose(fp);return ERROR;}
     fp = fopen("passwd", "a+");
     fputs(passwd, fp);
     fputc('\n', fp);
@@ -330,9 +331,6 @@ int Deluserstr(FILE *file, char delstr[])
         a++;
     }
     fclose(fp);
-    fclose(file);
-    if(remove("login")!=0) return ERROR;
-    if(rename("channel", "login")!=0) return ERROR;
     return OK;
 }
 
@@ -348,18 +346,24 @@ int Deluser()
     if(fp==NULL)
     {
         printf("\n        < 此系统还没有任何的用户 >\n");
+        fclose(fp);
         return ERROR;
     }
 
     if(repeat_LoginVerify(user)==1)
     {
         printf("\n        < 此用户不存在 >\n");
+        fclose(fp);
         return ERROR;
     }
     else
     {
         if(Deluserstr(fp, user)==1)
         {
+            fclose(fp);
+            if(remove("login")!=0) return ERROR;
+            if(rename("channel", "login")!=0) return ERROR;
+
             if(Deluserpasswd(flag)==1)
                 printf("\n        < 用户删除成功 >\n");
             else printf("\n        < 用户删除失败1 >\n");
@@ -381,6 +385,7 @@ int Loaduser()
     if(fp == NULL)
     {
         printf("\n        < 此系统中还没有注册用户 >\n");
+        fclose(fp);
         return ERROR;
     }
     printf("        此系统中的用户如下：\n\n");

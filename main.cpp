@@ -68,6 +68,7 @@ int main()
                 case '1' :
                     printf("        请输入你要查看的联系人的名字：");
                     scanf("%s", input);
+                    getchar();
                     ElasticSearch(input);
                     break;
                 case '2' :
@@ -125,6 +126,7 @@ int main()
                 case '5' :
                     printf("        请输入要修改的联系人名字：");
                     scanf("%s", input);
+                    getchar();
                     if(ModifyAddress(input)!=-1) printf("\n        < 联系人信息修改成功 >\n");
                     else                         printf("\n        < 联系人不存在，修改信息失败,请输入完整的名字 >\n");
                     break;
