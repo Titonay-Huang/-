@@ -25,32 +25,11 @@ int repeat_LoginVerify(char input[])
     flag=0;
     char user[MAX_LENGTH];
     fp = fopen("login", "r");
-    if(fp==NULL) return ERROR;
+    if(fp==NULL) return 0;
     while(fgets(user, MAX_LENGTH, fp)!=NULL)
     {
         user[strlen(user)-1] = '\0';
         if(strcmp(user, input)==0) {flag++; break;}
-    }
-    fclose(fp);
-    if(flag==1) return ERROR;
-    else return OK;  //已存在则返回-1， 不存在则返回1
-}
-
-int repeat_NameVerify(char input[])
-{
-    FILE *fp;
-    char user[MAX_LENGTH];
-    flag=0;
-    fp = fopen("name", "r");
-    if(fp==NULL) return ERROR;
-    while(fgets(user, MAX_LENGTH, fp)!=NULL)
-    {
-        user[strlen(user)-1] = '\0';
-        if(strcmp(user, input)==0)
-        {
-            flag=1;
-            break;
-        }
     }
     fclose(fp);
     if(flag==1) return ERROR;
@@ -169,10 +148,11 @@ int Signin(char input[])
     int a=0;;
     char name[MAX_LENGTH];
     fp = fopen("login", "r");
+    flag=0;
     if(fp == NULL)
     {
         printf("\n        < 此系统还未注册用户 >\n");
-        return ERROR;
+        return -2;
     }
     while(fgets(name, sizeof(name), fp) != NULL)
     {
@@ -195,33 +175,47 @@ int Signin(char input[])
 
 int user_Signin()
 {
-    char user[MAX_LENGTH];
+    char user[MAX_LENGTH], passwd[MAX_LENGTH];
+    int nb;
     a=3;
     printf("        请输入用户名：");
     scanf("%s", user);
     getchar();
-    while(a--)
+    while(a)
     {
-
-        if(Signin(user)!=-1)
+        nb=Signin(user);
+        if(nb==-2) return ERROR;
+        else if(nb>=0)
         {
             printf("        用户存在，请输入密码：");
-            scanf("%s", user);
+            scanf("%s", passwd);
             getchar();
             break;
         }
-        else
+
+        else if(nb==-1)
         {
             printf("        用户不存在, 请重新输入：");
             scanf("%s", user);
             getchar();
         }
+        a--;
+
     }
-    if(a<0) return ERROR;
+    if(a==0)
+    {
+        if(Signin(user)==-1) return ERROR;
+        else
+        {
+            printf("        用户存在，请输入密码：");
+            scanf("%s", passwd);
+            getchar();
+        }
+    }
     a=3;
     while(a--)
     {
-        if(passwd_Verify(user))
+        if(passwd_Verify(passwd)==1)
         {
             printf("\n        < 密码正确，登陆成功 >\n        < 欢迎进入通讯录系统 >\n");
             return 1;
@@ -230,11 +224,11 @@ int user_Signin()
         {
             printf("\n        < 密码错误 >\n");
             printf("\n        请重新输入：");
-            scanf("%s", user);
+            scanf("%s", passwd);
             getchar();
         }
     }
-    if(a<0) return ERROR;
+    if(a==0) return ERROR;
     return OK;
 }
 

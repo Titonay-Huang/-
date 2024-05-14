@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 #include "functions.h"
-#include "AddressList.h"
+#include "addresspanel.h"
 #define MAX_LENGTH 50
 
 int main()
@@ -53,8 +53,9 @@ int main()
             printf("    *                                                      *\n");
             printf("    *     用户 %-20s 你好，请选择功能：     *\n", face);
             printf("    *       1、查找联系人               2、增加联系人      *\n");
-            printf("    *       3、列出所有联系人           4、列出标签种类    *\n");
-            printf("    *       5、查看标签内联系人         6、退出登录        *\n");
+            printf("    *       3、列出所有联系人           4、修改联系人信息  *\n");
+            printf("    *       5、删除联系人               6、指定搜索分类    *\n");
+            printf("    *       7、退出登录                                    *\n");
             printf("    *                                                      *\n");
             printf("    *      ##请注意：输入过程中不可以有任何的空格哦##      *\n");
             printf("    *  ##如需要删除联系人或者修改联系人信息请联系管理员##  *\n");
@@ -63,28 +64,46 @@ int main()
             printf("        请输入您需要的功能编号：");
             scanf("%c", &t);
             getchar();
+            S->next = NULL;
+            RefreshStruct(S);
             switch(t)
             {
+
                 case '1' :
                     printf("        请输入你要查看的联系人的名字：");
                     scanf("%s", input);
                     getchar();
-                    ElasticSearch(input);
+                    ElasticAddress(S, input);
                     break;
                 case '2' :
                     EnterAddress();
                     break;
                 case '3' :
-                    LoadAddress();
+                    LoadStruct(S);
                     break;
                 case '4' :
-                    LoadCategory();
+                    printf("        请输入你要修改的联系人的名称：");
+                    scanf("%s", input);
+                    getchar();
+                    ElasticAddress(S, input);
+                    ModifyAddress(S);
                     break;
                 case '5' :
-                    CheckCategory();
+                    printf("        请输入你要删除的联系人的名称：");
+                    scanf("%s", input);
+                    getchar();
+                    if(ElasticAddress(S, input)==1)
+                    {
+                        DelAddress(S);
+                    }
                     break;
                 case '6' :
+                    RefreshCategory(S);
+                    CategoryMenu(S);
+                    break;
+                case '7' :
                     status=0;
+                    S->next=NULL;
                     printf("\n        < 退出登录成功 >\n");
                     break;
                 default:
@@ -100,8 +119,7 @@ int main()
             printf("    *     管理员模式，请选择所需要的功能：                 *\n");
             printf("    *       1、更改管理员密码           2、增加用户        *\n");
             printf("    *       3、删除用户                 4、查看用户列表    *\n");
-            printf("    *       5、修改联系人信息           6、删除联系人      *\n");
-            printf("    *       7、退出登录                                    *\n");
+            printf("    *       5、退出登录                                    *\n");
             printf("    *                                                      *\n");
             printf("    *      ##请注意：输入过程中不可以有任何的空格哦##      *\n");
             printf("    *                                                      *\n");
@@ -124,22 +142,11 @@ int main()
                     Loaduser();
                     break;
                 case '5' :
-                    printf("        请输入要修改的联系人名字：");
-                    scanf("%s", input);
-                    getchar();
-                    if(ModifyAddress(input)!=-1) printf("\n        < 联系人信息修改成功 >\n");
-                    else                         printf("\n        < 联系人不存在，修改信息失败,请输入完整的名字 >\n");
-                    break;
-                case '6' :
-                    DelAddress();
-                    break;
-                case '7' :
                     status=0;
                     printf("\n        < 退出登录成功 >\n");
                     break;
             }
         }
-
     }
     return 0;
 }
