@@ -70,6 +70,11 @@ int main()
             {
 
                 case '1' :
+                    if(S->next==NULL)
+                    {
+                        printf("\n        < 目前暂未保存任何联系人信息 >\n");
+                        break;
+                    }
                     printf("        请输入你要查看的联系人的名字：");
                     scanf("%s", input);
                     getchar();
@@ -82,6 +87,11 @@ int main()
                     LoadStruct(S);
                     break;
                 case '4' :
+                    if(S->next==NULL)
+                    {
+                        printf("\n        < 目前暂未保存任何联系人信息 >\n");
+                        break;
+                    }
                     printf("        请输入你要修改的联系人的名称：");
                     scanf("%s", input);
                     getchar();
@@ -89,6 +99,11 @@ int main()
                     ModifyAddress(S);
                     break;
                 case '5' :
+                    if(S->next==NULL)
+                    {
+                        printf("\n        < 目前暂未保存任何联系人信息 >\n");
+                        break;
+                    }
                     printf("        请输入你要删除的联系人的名称：");
                     scanf("%s", input);
                     getchar();
@@ -98,6 +113,11 @@ int main()
                     }
                     break;
                 case '6' :
+                    if(S->next==NULL)
+                    {
+                        printf("\n        < 目前暂未保存任何联系人信息 >\n");
+                        break;
+                    }
                     RefreshCategory(S);
                     CategoryMenu(S);
                     break;

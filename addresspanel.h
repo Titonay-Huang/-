@@ -295,7 +295,7 @@ int ModifyAddress(Address *P)
     FILE *fp;
     Address *p;
     char temp[MAX_LENGTH];
-    printf("\n\n        请输入联系人所对应的编号以确认修改：");
+    printf("\n\n        请正确输入联系人所对应的编号以确认修改：");
     scanf("%s", temp);
     getchar();
 
