@@ -422,12 +422,15 @@ int CheckNewCategory(char test[])
 {
     FILE *fp;
     char temp[MAX_LENGTH];
-    fp = fopen("category", "a+");
-    if(fp==NULL) return ERROR;
+    fp = fopen("channel", "a+");
     while(fgets(temp, MAX_LENGTH, fp)!=NULL)
     {
         temp[strlen(temp)-1] = '\0';
-        if(strcmp(temp, test)==0) return ERROR;
+        if(strcmp(temp, test)==0)
+        {
+            fclose(fp);
+            return ERROR;
+        }
     }
     fputs(test, fp);
     fputc('\n', fp);
@@ -438,12 +441,15 @@ int CheckNewCategory(char test[])
 int RefreshCategory(Address *P)
 {
     Address *p;
+
     p=P->next;
     while(p!=NULL)
     {
-        CheckNewCategory(p->category);
+        CheckNewCategory( p->category);
         p=p->next;
     }
+    remove("category");
+    rename("channel", "category");
     return OK;
 }
 
@@ -466,6 +472,7 @@ int CategoryMenu(Address *P)
         flag++;
     }
     printf("        共有 %d 种分类\n\n", flag);
+    fclose(fp);
     printf("        请输入你要查看的分类：");
     scanf("%s", temp);
     getchar();
