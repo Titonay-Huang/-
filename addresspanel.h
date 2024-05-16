@@ -96,6 +96,43 @@ int LoadStruct(Address *P)
     return OK;
 }
 
+int OutputNode(Address *p)
+{
+    printf("\n");
+    printf("        编号：%s\n", p->number);
+    printf("        姓名：%s\n", p->name);
+    printf("        标签：%s\n", p->category);
+    printf("        手机号码：%s\n", p->phone);
+    printf("        QQ号码：%s\n", p->qq);
+    printf("        邮箱地址：%s\n", p->email);
+    printf("        家庭住址：%s\n", p->places);
+    printf("\n");
+    return OK;
+}
+
+int LoadName(Address *P)
+{
+    int flag=0;
+    if(P->next==NULL)
+    {
+        printf("\n        < 目前暂未保存任何联系人信息 >\n");
+        return ERROR;
+    }
+    printf("        名单如下：\n");
+    Address *p;
+    p=P->next;
+    printf("        ----------------------------------\n");
+    while(p!=NULL)
+    {
+        printf("        * %s *\n", p->name);
+        flag++;
+        p=p->next;
+    }
+    printf("        ----------------------------------\n");
+    printf("        共有(符合条件） %d 个联系人信息，按名字顺序排序", flag);
+    return OK;
+}
+
 int RefreshStruct(Address *P)
 {
      Address *p;
@@ -255,33 +292,60 @@ int VerifyName(char comp[], char getstr[])
     }
 }
 
+int VerifyPhone(char comp[], char getstr[])
+{
+    int i=0, j=0;
+    while(i<strlen(comp) && j<strlen(getstr))
+    {
+        if(comp[i]==getstr[j]) {i++; j++;}
+        else return ERROR;
+        if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
+        else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
+    }
+}
+
 int ElasticAddress(Address *P, char input[])
 {
     int flag=0;
-    char temp[MAX_LENGTH];
-    Address *p, *A, *q;
+    Address *p;
     p=P->next;
-    A=new Address;
-    A->next = NULL;
+    printf("        ----------------------------------\n");
     while(p!=NULL)
     {
-        q=new Address;
         if(VerifyName(input, p->name)==1)
         {
-            strcpy(q->number, p->number);
-            strcpy(q->name, p->name);
-            strcpy(q->category, p->category);
-            strcpy(q->phone, p->phone);
-            strcpy(q->qq, p->qq);
-            strcpy(q->email, p->email);
-            strcpy(q->places, p->places);
-            q->next = NULL;
-            EnterStruct(A, q);
+           OutputNode(p);
             flag++;
         }
         p=p->next;
     }
-    LoadStruct(A);
+    printf("        ----------------------------------\n");
+    printf("        共有(符合条件） %d 个联系人信息，按名字顺序排序", flag);
+    if(flag==0)
+    {
+        printf("\n        < 找不到对应的联系人 >\n");
+        return ERROR;
+    }
+    return OK;
+}
+
+int PhoneSearch(Address *P, char input[])
+{
+    int flag=0;
+    Address *p;
+    p=P->next;
+    printf("        ----------------------------------\n");
+    while(p!=NULL)
+    {
+        if(VerifyPhone(input, p->phone)==1)
+        {
+           OutputNode(p);
+            flag++;
+        }
+        p=p->next;
+    }
+    printf("        ----------------------------------\n");
+    printf("        共有(符合条件） %d 个联系人信息，按名字顺序排序", flag);
     if(flag==0)
     {
         printf("\n        < 找不到对应的联系人 >\n");
@@ -456,13 +520,10 @@ int RefreshCategory(Address *P)
 int CategoryMenu(Address *P)
 {
     FILE *fp;
-    Address *p, *A, *q;
+    Address *p;
     int flag=0;
     char temp[MAX_LENGTH];
-    A=new Address;
     p=P->next;
-    A->next = NULL;
-
     printf("        存在的分类如下：\n\n");
     fp=fopen("category", "r");
     while(fgets(temp, MAX_LENGTH, fp)!=NULL)
@@ -476,24 +537,18 @@ int CategoryMenu(Address *P)
     printf("        请输入你要查看的分类：");
     scanf("%s", temp);
     getchar();
+    flag=0;
+    printf("        ----------------------------------\n");
     while(p!=NULL)
     {
         if(strcmp(temp, p->category)==0)
         {
-            q=new Address;
-            strcpy(q->number, p->number);
-            strcpy(q->name, p->name);
-            strcpy(q->category, p->category);
-            strcpy(q->phone, p->phone);
-            strcpy(q->qq, p->qq);
-            strcpy(q->email, p->email);
-            strcpy(q->places, p->places);
-            q->next = NULL;
-            EnterStruct(A, q);
+            OutputNode(p);
             flag++;
         }
         p=p->next;
     }
-    LoadStruct(A);
+    printf("        ----------------------------------\n");
+    printf("        共有(符合条件） %d 个联系人信息，按名字顺序排序", flag);
     return OK;
 }

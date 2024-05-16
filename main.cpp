@@ -53,9 +53,9 @@ int main()
             printf("    *                                                      *\n");
             printf("    *     用户 %-20s 你好，请选择功能：     *\n", face);
             printf("    *       1、查找联系人               2、增加联系人      *\n");
-            printf("    *       3、列出所有联系人           4、修改联系人信息  *\n");
+            printf("    *       3、列出所有名单             4、修改联系人信息  *\n");
             printf("    *       5、删除联系人               6、指定搜索分类    *\n");
-            printf("    *       7、退出登录                                    *\n");
+            printf("    *       7、列出所有联系人信息       8、退出登录        *\n");
             printf("    *                                                      *\n");
             printf("    *      ##请注意：输入过程中不可以有任何的空格哦##      *\n");
             printf("    *  ##如需要删除联系人或者修改联系人信息请联系管理员##  *\n");
@@ -75,16 +75,17 @@ int main()
                         printf("\n        < 目前暂未保存任何联系人信息 >\n");
                         break;
                     }
-                    printf("        请输入你要查看的联系人的名字：");
+                    printf("        请输入你要查看的联系人的名字或电话：");
                     scanf("%s", input);
                     getchar();
-                    ElasticAddress(S, input);
+                    if(input[0] < 0) ElasticAddress(S, input);
+                    else PhoneSearch(S, input);
                     break;
                 case '2' :
                     EnterAddress();
                     break;
                 case '3' :
-                    LoadStruct(S);
+                    LoadName(S);
                     break;
                 case '4' :
                     if(S->next==NULL)
@@ -92,7 +93,7 @@ int main()
                         printf("\n        < 目前暂未保存任何联系人信息 >\n");
                         break;
                     }
-                    printf("        请输入你要修改的联系人的名称：");
+                    printf("        请输入你所要修改的联系人的名称：");
                     scanf("%s", input);
                     getchar();
                     ElasticAddress(S, input);
@@ -104,7 +105,7 @@ int main()
                         printf("\n        < 目前暂未保存任何联系人信息 >\n");
                         break;
                     }
-                    printf("        请输入你要删除的联系人的名称：");
+                    printf("        请输入你所要删除的联系人的名称：");
                     scanf("%s", input);
                     getchar();
                     if(ElasticAddress(S, input)==1)
@@ -122,6 +123,9 @@ int main()
                     CategoryMenu(S);
                     break;
                 case '7' :
+                    LoadStruct(S);
+                    break;
+                case '8' :
                     status=0;
                     S->next=NULL;
                     printf("\n        < 退出登录成功 >\n");
