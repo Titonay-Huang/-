@@ -6,7 +6,7 @@
 #define MAX_USERS 1000
 
 typedef struct people
-                                                                                                                                                                                                                                                                                                                 {
+{                                                                                                                                                                                                                                                                                                                 {
     char number[MAX_LENGTH];
     char name[MAX_LENGTH];
     char category[MAX_LENGTH];
@@ -115,13 +115,13 @@ int LoadName(Address *P)
     int flag=0;
     if(P->next==NULL)
     {
-        printf("\n        < 目前暂未保存任何联系人信息 >\n");
+        printf("\n        < 目前暂未保存任何联系人信息 >\n\n");
         return ERROR;
     }
     printf("        名单如下：\n");
     Address *p;
     p=P->next;
-    printf("        ----------------------------------\n");
+    printf("\n        ----------------------------------\n");
     while(p!=NULL)
     {
         printf("        * %s *\n", p->name);
