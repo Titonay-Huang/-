@@ -298,7 +298,7 @@ int VerifyPhone(char comp[], char getstr[])
     while(i<strlen(comp) && j<strlen(getstr))
     {
         if(comp[i]==getstr[j]) {i++; j++;}
-        else return ERROR;
+        else {i=0;j++;}
         if(i==strlen(comp) && j<strlen(getstr) || i==strlen(comp) && j==strlen(getstr)) return OK;
         else if(i<strlen(comp) && j==strlen(getstr)) return ERROR;
     }
